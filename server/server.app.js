@@ -1,4 +1,89 @@
-// npm install express mongoose passport passport-local passport-jwt bcrypt dotenv cookie-parser express-session connect-mongo jsonwebtoken
+// Dependencias que instalé: npm install express mongoose passport passport-local passport-jwt bcrypt dotenv cookie-parser express-session connect-mongo jsonwebtoken
+
+/*
+Tp1/
+│
+├── config/
+│   ├── auth/
+│   │   └── passport.config.js
+│   │       # Inicializa Passport y define estrategias:
+│   │       # - local ("login"): login con email + password
+│   │       # - jwt ("current"): autentica usuario con token JWT
+│   ├── db/
+│   │   └── connect.config.js
+│   │       # Conexión a MongoDB (local o Atlas)
+│   ├── env.config.js
+│   │       # Carga y valida variables de entorno (PORT, SECRET_SESSION, JWT_SECRET..)
+│   └── models/
+│       ├── student.model.js
+│       │       # Modelo de Mongoose para estudiantes
+│       │       # Campos: name, email, age
+│       │       # CRUD realizado en student.router.js
+│       └── user.model.js
+│               # Modelo de Mongoose para usuarios
+│               # Campos: first_name, last_name, email, password, age, role
+│               # CRUD realizado en user.router.js
+│
+├── middleware/
+│   ├── auth.middleware.js
+│   │       # Middlewares de autenticación:
+│   │       # - requireLogin: protege rutas que requieren sesión activa
+│   │       # - alreadyLogin: evita que usuarios logueados vuelvan a /login o /register
+│   │       # - requiereJWT: protege rutas con token JWT
+│   ├── logger.middleware.js
+│   │       # Middleware que loguea todas las requests con método, ruta y tiempo
+│   └── polices.middleware.js
+│           # Middleware para control de roles (ej: admin, user)
+│
+├── routes/
+│   ├── auth.router.js
+│   │       # Endpoints de autenticación:
+│   │       # - POST /register → registro usuario local
+│   │       # - POST /login → login con sesión Passport local
+│   │       # - POST /logout → cerrar sesión
+│   │       # - GET /current → devuelve usuario logueado en sesión
+│   │       # - GET /github, /github/callback, /github/fail → login OAuth GitHub
+│   │       # - POST /jwt/login → login con JWT
+│   │       # - GET /jwt/current → usuario autenticado por JWT
+│   ├── home.router.js
+│   │       # Endpoint de prueba / home
+│   │       # - GET / → devuelve mensaje de bienvenida
+│   ├── jwt.router.js
+│   │       # Endpoints específicos de JWT si se separan de auth
+│   │       # - GET /current → devuelve usuario autenticado vía token
+│   ├── router.js
+│   │       # Inicializa todos los routers y los monta en Express:
+│   │       # Ej: app.use("/api/auth", authRouter)
+│   │       #     app.use("/api/students", studentRouter)
+│   │       #     app.use("/", homeRouter)
+│   ├── student.router.js
+│   │       # CRUD de estudiantes:
+│   │       # - GET /students → todos los estudiantes
+│   │       # - POST /students → crear estudiante
+│   │       # - GET /students/:id → obtener estudiante por id
+│   │       # - PUT /students/:id → actualizar estudiante
+│   │       # - DELETE /students/:id → eliminar estudiante
+│   └── user.router.js
+│           # CRUD de usuarios:
+│           # - GET /users → todos los usuarios (requiere login + rol)
+│           # - POST /users/register → registro (ya visto en auth.router.js)
+│           # - PUT /users/:uid → actualizar usuario (solo admin)
+│           # - DELETE /users/:uid → eliminar usuario (solo admin)
+│
+├── server/
+│   └── server.app.js
+│           # Punto de entrada de la app
+│           # - Carga middlewares globales (JSON, logger, cookies)
+│           # - Conecta DB
+│           # - Configura sesión con MongoStore
+│           # - Inicializa Passport y sesiones
+│           # - Inicializa routers
+│           # - Arranca servidor
+│
+└── .env
+        # Variables de entorno
+*/
+
 
 import express from 'express';
 import passport from 'passport';
